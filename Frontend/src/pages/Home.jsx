@@ -270,7 +270,7 @@ const Home = () => {
 
       <img
         className="w-14 absolute left-5 top-5"
-        src="/Image/uber_log.png"
+        src="https://in.pinterest.com/pin/1548181158815462/"
         alt=""
       ></img>
 

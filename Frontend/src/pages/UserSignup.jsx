@@ -45,7 +45,7 @@ const UserSignup = () => {
   return (
     <div className="p-7 h-screen flex flex-col justify-between">
       <div>
-        <img className="w-14 mb-10" src="/Image/uber_log.png" alt="Uber Logo" />
+        <img className="w-14 mb-10" src="https://in.pinterest.com/pin/1548181158815462/" alt="" />
         <form onSubmit={handlerSubmit}>
           <h3 className="text-lg font-medium mb-2">What's your name</h3>
           <div className="flex gap-5 mb-6">
