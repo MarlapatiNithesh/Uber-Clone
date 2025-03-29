@@ -1,4 +1,5 @@
 const axios = require("axios");
+const captainModel=require("../models/captain.model.js")
 
 const getCoordinatesFromAddress = async (address) => {
   try {
@@ -36,7 +37,6 @@ const getDistanceTime = async (origin, destination) => {
     const response = await axios.get(url);
     const data = response.data;
     
-    console.log("Google Maps API Response:", JSON.stringify(data, null, 2)); // Debugging
 
     if (data.status === "OK") {
         if(data.rows[0].elements[0].status==='ZERO_RESULTS'){
@@ -76,9 +76,29 @@ const getAutoCompleteSuggestions = async(input) => {
 
 }
 
+const getCaptainsInTheRadius = async (lat, lng, radius) => {
+  console.log(`Searching captains near: lat=${lat}, lng=${lng}, radius=${radius} km`);
+
+  try {
+    const captains = await captainModel.find({
+      location: {
+        $geoWithin: {
+          $centerSphere: [[lat, lng], radius / 6371],
+        },
+      },
+    });
+    return captains;
+  } catch (error) {
+    console.error("Error fetching captains in radius:", error.message);
+    throw error;
+  }
+};
+
+
 // ✅ Export both functions properly
 module.exports = {
   getCoordinatesFromAddress,
   getDistanceTime,
   getAutoCompleteSuggestions,
+  getCaptainsInTheRadius,
 };

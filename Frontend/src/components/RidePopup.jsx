@@ -3,15 +3,8 @@ import React from "react";
 const RidePopup = (props) => {
   return (
     <div>
-      <h5
-        onClick={() => {
-          props.setRidePopupPanel(false);
-        }}
-        className="p-1 w-[93%] text-center absolute top-0"
-      >
-        <i className="text-3xl text-gray-200 ri-arrow-down-wide-line"></i>
-      </h5>
-      <h3 className="text-2xl font-semibold mb-5">New Ride Available!</h3>
+
+      <h3 className="text-2xl text-center font-semibold mb-5">New Ride Available!</h3>
       <div className="flex items-center justify-between p-3 bg-yellow-400 rounded-lg mt-4">
         <div className="flex items-center justify-start gap-4">
           <img
@@ -19,7 +12,7 @@ const RidePopup = (props) => {
             src="https://i.pinimg.com/474x/03/18/c0/0318c096dd8382a1aadb05196f491d20.jpg"
             alt=""
           ></img>
-          <h2 className="text-xl font-semibold">Danika</h2>
+          <h2 className="text-xl font-semibold">{props.ride?.user.fullname.firstname+" "+props.ride?.user.fullname.lastname}</h2>
         </div>
         <h5 className="text-sm font-semibold">2.2KM</h5>
       </div>
@@ -28,26 +21,24 @@ const RidePopup = (props) => {
           <div className="flex items-center gap-5 p-3 border-b-2">
             <i className="text-lg ri-map-pin-user-fill"></i>
             <div>
-              <h3 className="text-xl font-medium">562/11-A</h3>
-              <p className="text-sm -mt-1 text-gray-600">
-                Kankariya Talab,Bhopal
+              <p className="text-lg -mt-1 text-gray-600">
+                {props.ride?.pickup}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-5 p-3 border-b-2">
             <i className="text-lg ri-map-pin-2-fill"></i>
             <div>
-              <h3 className="text-xl font-medium">562/11-A</h3>
-              <p className="text-sm -mt-1 text-gray-600">
-                Kankariya Talab,Bhopal
+              <p className="text-lg -mt-1 text-gray-600">
+                {props.ride?.destination}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-5 p-3">
             <i className="text-lg ri-currency-line"></i>
             <div>
-              <h3 className="text-xl font-medium">₹193.50</h3>
-              <p className="text-sm -mt-1 text-gray-600">Cash</p>
+              <h3 className="text-xl font-medium"> ₹{Math.floor(props.ride?.fare)}</h3>
+              <p className="text-lg -mt-1 text-gray-600">Cash</p>
             </div>
           </div>
         </div>
@@ -65,6 +56,7 @@ const RidePopup = (props) => {
             onClick={() => {
               props.setAcceptRidePopupPanel(true);
               props.setRidePopupPanel(false);
+              props.confirmRide(props.ride)
             }}
             className=" bg-green-600 text-white font-semibold p-3 px-10 rounded-lg"
           >

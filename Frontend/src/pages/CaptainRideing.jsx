@@ -1,11 +1,16 @@
 import React, { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import FinishRide from "../components/FinishRide";
+import LiveTracking from "../components/LiveTracking";
 
 const CaptainRideing = () => {
   const [finishRidePanel, setFinishRidePanel] = useState(false);
+  const location = useLocation()
+  const rideData =
+    location.state?.ride || JSON.parse(localStorage.getItem("rideData"));
+  console.log("Received rideData:", JSON.stringify(rideData, null, 2));
 
   const finishRidePanelRef = useRef(null);
   useGSAP(
@@ -24,22 +29,9 @@ const CaptainRideing = () => {
   );
 
   return (
-    <div className="h-screen w-full overflow-hidden relative">
-      <div className="fixed p-6 top-0 flex items-center justify-between w-full">
-        <img className="w-16" src="/Image/uber_log.png"></img>
-        <Link
-          to="/captain-home"
-          className="h-10 w-10 bg-white flex items-center justify-center rounded-full"
-        >
-          <i className="text-lg font-medium ri-logout-box-r-line"></i>
-        </Link>
-      </div>
-      <div className="h-4/5">
-        <img
-          className="h-full w-full object-cover"
-          src="https://s.wsj.net/public/resources/images/BN-XR452_201802_M_20180228165525.gif"
-          alt=""
-        ></img>
+    <div className="h-screen w-full overflow-hidden relative flex flex-col justify-end">
+      <div className="max-h-[80%]">
+      <LiveTracking/>
       </div>
       <div
         onClick={() => {
@@ -59,10 +51,24 @@ const CaptainRideing = () => {
         </button>
       </div>
       <div ref={finishRidePanelRef} className="h-screen fixed z-10 bottom-0 bg-white w-full translate-y-full px-3 py-10 pt-12">
-        <FinishRide setFinishRidePanel={setFinishRidePanel}/>
+        <FinishRide rideData={rideData} setFinishRidePanel={setFinishRidePanel}/>
+      </div>
+
+      <div className="absolute p-6 top-0 flex items-center justify-between w-full">
+        <img className="w-16" src="/Image/uber_log.png"></img>
+        <Link
+          to="/captain-home"
+          className="h-10 w-10 bg-white flex items-center justify-center rounded-full"
+        >
+          <i className="text-lg font-medium ri-logout-box-r-line"></i>
+        </Link>
       </div>
     </div>
   );
 };
 
 export default CaptainRideing;
+
+
+
+

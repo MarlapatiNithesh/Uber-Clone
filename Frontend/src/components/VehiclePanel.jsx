@@ -1,16 +1,18 @@
 import React from 'react'
 
-const VehiclePanel = ({setConfirm,setVehiclePanel}) => {
+const VehiclePanel = ({setPanelOpen,setConfirm,setVehiclePanel,fare={},setVehicletype}) => {
   return (
     <div>
         <h5 onClick={()=>{
             setVehiclePanel(false)
+            setPanelOpen(true)
           }} className="p-1 w-[93%] text-center absolute top-0"><i className="text-3xl text-gray-200 ri-arrow-down-wide-line"></i></h5>
-          <h3 className="text-2xl font-semibold mb-5">Choose a Vehicle</h3>
+          <h3 className="text-2xl font-semibold mb-5 text-center">Choose a Vehicle</h3>
 
           <div onClick={()=>{
             setConfirm(true)
             setVehiclePanel(false)
+            setVehicletype('car')
           }} className="flex border-2 active:border-black  rounded-xl items-center mb-2 p-3 justify-between w-full">
             <img
               className="h-12 object-contain"
@@ -24,11 +26,12 @@ const VehiclePanel = ({setConfirm,setVehiclePanel}) => {
               <h5 className="font-medium text-sm">2 mins away</h5>
               <p className="font-medium text-xs">Affordable, compact rides</p>
             </div>
-            <h2 className="text-lg font-semibold">₹193.20</h2>
+            <h2 className="text-lg font-semibold">₹{Math.floor(fare.car)}</h2>
           </div>
           <div onClick={()=>{
             setConfirm(true)
-            setVehiclePanel(false) 
+            setVehiclePanel(false)
+            setVehicletype('moto') 
           }} className="flex border-2 active:border-black rounded-xl items-center mb-2 p-3 justify-between w-full">
             <img
               className="h-12 object-contain"
@@ -44,11 +47,12 @@ const VehiclePanel = ({setConfirm,setVehiclePanel}) => {
                 Affordable, motorcycle rides
               </p>
             </div>
-            <h2 className="text-lg font-semibold">₹65</h2>
+            <h2 className="text-lg font-semibold">₹{Math.floor(fare.moto)}</h2>
           </div>
           <div onClick={()=>{
             setConfirm(true)
             setVehiclePanel(false)
+            setVehicletype('auto')
           }} className="flex border-2 active:border-black  rounded-xl items-center mb-2 p-3 justify-between w-full">
             <img
               className="h-12 object-contain"
@@ -62,7 +66,7 @@ const VehiclePanel = ({setConfirm,setVehiclePanel}) => {
               <h5 className="font-medium text-sm">4 mins away</h5>
               <p className="font-medium text-xs">Affordable, Auto rides</p>
             </div>
-            <h2 className="text-lg font-semibold">₹118.20</h2>
+            <h2 className="text-lg font-semibold">₹{Math.floor(fare.auto)}</h2>
           </div>
     </div>
   )

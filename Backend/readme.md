@@ -466,3 +466,62 @@ This endpoint logs out the authenticated captain by blacklisting the token.
   "message": "unauthorized"
 }
 ```
+
+## Endpoint: `/locations/suggestions`
+
+### Description
+This endpoint provides location suggestions based on the user's input query.
+
+### Method
+`GET`
+
+### Query Parameters
+- `query`: `string` (required) - The input text to search for location suggestions.
+
+### Response
+
+#### Success (200 OK)
+- **Description**: Returns a list of location suggestions.
+- **Response Body**:
+  ```json
+  {
+    "suggestions": [
+      "string (location suggestion)",
+      "string (location suggestion)"
+    ]
+  }
+  ```
+
+#### Error (400 Bad Request)
+- **Description**: Invalid or missing query parameter.
+- **Response Body**:
+  ```json
+  {
+    "error": "string (error message)"
+  }
+  ```
+
+#### Error (500 Internal Server Error)
+- **Description**: Server encountered an unexpected condition.
+- **Response Body**:
+  ```json
+  {
+    "error": "string (error message)"
+  }
+  ```
+
+### Example Request
+```bash
+curl -X GET "http://localhost:<port>/locations/suggestions?query=Sheryians" \
+-H "Content-Type: application/json"
+```
+
+### Example Response (Success)
+```json
+{
+  "suggestions": [
+    "24B, Near Kappor's Cafe, Sheryians Coding School, Bhopal",
+    "22B, Near Malhotra's Cafe, Sheryians Coding School, Bhopal"
+  ]
+}
+```

@@ -1,29 +1,40 @@
-import React from "react";
+const LocationSearchPanel = ({
+  setPanelOpen,
+  suggestions,
+  setSuggestions, // Add this prop to update suggestions
+  setPickUp,
+  setDestination,
+  activeField,
+}) => {
+  const handlerLocationsuggestions = async (location) => {
+    if (!location) return;
 
-const LocationSearchPanel = ({setPanelOpen, setVehiclePanel }) => {
-  const locations = [
-    "24B, Near Kappor's Cafe, Sheryians Coding School, Bhopal",
-    "22B, Near Malhotra's Cafe, Sheryians Coding School, Bhopal",
-    "20B, Near Singhai's Cafe, Sheryians Coding School, Bhopal",
-    "18A, Near Sharma's Cafe, Sheryians Coding School, Bhopal",
-  ];
+    if (activeField === "pickup") {
+      setPickUp(location);
+      setPanelOpen(true);
+    } else {
+      setDestination(location);
+    }
+
+    // Correct way to clear suggestions
+    setSuggestions([]); 
+  };
 
   return (
     <div>
-      {/* Perfect Circle Icon */}
-      {locations.map((location, index) => (
+      {suggestions.map((location, index) => (
         <div
           key={index}
-          onClick={() =>{
-            setPanelOpen(false)
-            setVehiclePanel(true)
-          }}
-          className="flex gap-4 border-2 p-3 border-gray-50 active:border-black rounded-xl items-center my-2 justify-start cursor-pointer"
+          onClick={() => handlerLocationsuggestions(location)}
+          className="flex items-center gap-4 border-2 p-3 border-gray-200 active:border-black rounded-xl my-3 cursor-pointer transition"
         >
-          <h2 className="h-10 w-10 bg-[#eee] flex items-center justify-center rounded-full">
-            <i className="ri-map-pin-fill"></i>
-          </h2>
-          <h4 className="ml-3">{location}</h4>
+          {/* Fully Rounded Circle Icon */}
+          <div className="h-10 w-10 flex items-center justify-center bg-gray-200 rounded-full flex-shrink-0">
+            <i className="ri-map-pin-fill text-xl text-black"></i>
+          </div>
+
+          {/* Location Text */}
+          <h4 className="ml-2 text-gray-800">{location}</h4>
         </div>
       ))}
     </div>

@@ -1,8 +1,9 @@
+import axios from "axios";
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const AcceptRidePopup = (props) => {
-  const [otp, setOtp] = useState(["", "", "", ""]); 
+  const [otp, setOtp] = useState(["", "", "", "","",""]); 
   const [error, setError] = useState("");
   const inputRefs = useRef([]);
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const AcceptRidePopup = (props) => {
     newOtp[index] = value;
     setOtp(newOtp);
 
-    if (value !== "" && index < 3) {
+    if (value !== "" && index < 5) {
       inputRefs.current[index + 1].focus(); // Move to next input
     }
   };
@@ -24,22 +25,53 @@ const AcceptRidePopup = (props) => {
   // ✅ Handles backspace key navigation
   const handleBackspace = (index, e) => {
     if (e.key === "Backspace" && otp[index] === "" && index > 0) {
-      inputRefs.current[index - 1].focus(); // Move back
+      inputRefs.current[index - 1].focus(); 
     }
   };
 
-  // ✅ Handles form submission
-  const submitHandler = (e) => {
+
+  const submitHandler = async (e) => {
     e.preventDefault();
-    if (otp.includes("") || otp.length < 4) {
-      setError("Please enter a 4-digit OTP");
+  
+    if (otp.includes("") || otp.length < 6) {
+      setError("Please enter a 6-digit OTP");
       return;
     }
-
+  
     setError("");
     props.setAcceptRidePopupPanel(false);
-    navigate("/captain-rideing");
+  
+    const token = localStorage.getItem("token");
+    const otpString = otp.join("");
+
+    console.log(`ride id : ${props.ride._id}`);
+  
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/rides/start-ride`,
+        {
+          params: {
+            rideId: props.ride?._id,
+            otp: otpString,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      console.log("Ride started:", response.data);
+      props.setAcceptRidePopupPanel(false);
+      props.setRidePopupPanel(false);
+      localStorage.setItem("rideData", JSON.stringify(response.data));
+      navigate("/captain-rideing", { state: { ride: response.data } });
+
+    } catch (error) {
+      console.error("Error starting ride:", error.response?.data || error.message);
+      setError(error.response?.data?.message || "Failed to start the ride. Try again.");
+    }
   };
+  
 
   return (
     <div>
@@ -49,7 +81,7 @@ const AcceptRidePopup = (props) => {
       >
         <i className="text-3xl text-gray-200 ri-arrow-down-wide-line"></i>
       </h5>
-      <h3 className="text-2xl font-semibold mb-5">Confirm this ride to Start</h3>
+      <h3 className="text-2xl font-semibold text-center mb-5">Confirm this ride to Start</h3>
 
       {/* Ride Details */}
       <div className="flex items-center justify-between p-3 bg-yellow-400 rounded-lg mt-4">
@@ -59,7 +91,7 @@ const AcceptRidePopup = (props) => {
             src="https://i.pinimg.com/474x/03/18/c0/0318c096dd8382a1aadb05196f491d20.jpg"
             alt="User"
           />
-          <h2 className="text-xl font-semibold">Danika</h2>
+          <h2 className="text-xl font-semibold">{props.ride?.user?.fullname?.firstname+" "+props.ride?.user?.fullname?.lastname}</h2>
         </div>
         <h5 className="text-sm font-semibold">2.2KM</h5>
       </div>
@@ -69,21 +101,19 @@ const AcceptRidePopup = (props) => {
         <div className="flex items-center gap-5 p-3 border-b-2">
           <i className="text-lg ri-map-pin-user-fill"></i>
           <div>
-            <h3 className="text-xl font-medium">562/11-A</h3>
-            <p className="text-sm -mt-1 text-gray-600">Kankariya Talab, Bhopal</p>
+            <p className="text-sm -mt-1 text-gray-600">{props.ride?.pickup}</p>
           </div>
         </div>
         <div className="flex items-center gap-5 p-3 border-b-2">
           <i className="text-lg ri-map-pin-2-fill"></i>
           <div>
-            <h3 className="text-xl font-medium">562/11-A</h3>
-            <p className="text-sm -mt-1 text-gray-600">Kankariya Talab, Bhopal</p>
+            <p className="text-sm -mt-1 text-gray-600">{props.ride?.destination}</p>
           </div>
         </div>
         <div className="flex items-center gap-5 p-3">
           <i className="text-lg ri-currency-line"></i>
           <div>
-            <h3 className="text-xl font-medium">₹193.50</h3>
+            <h3 className="text-xl font-medium">₹{Math.floor(props.ride?.fare)}</h3>
             <p className="text-sm -mt-1 text-gray-600">Cash</p>
           </div>
         </div>
