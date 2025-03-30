@@ -44,7 +44,7 @@ const UserLogin = () => {
     return (
         <div className="p-7 h-screen flex flex-col justify-between">
             <div>
-                <img className="w-14 mb-10" src="https://in.pinterest.com/pin/1548181158815462/" alt="" />
+                <img className="w-14 mb-10" src="https://pathforward.org/wp-content/uploads/2019/01/Uber_Logo_Black-e1547485455995.jpg" alt="" />
                 <form onSubmit={handleSubmit}>
                     <h3 className="text-lg font-medium mb-2">What's your email</h3>
                     <input
