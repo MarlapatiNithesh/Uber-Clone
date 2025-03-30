@@ -11,11 +11,7 @@ const mapRoutes = require('./routes/map.routes.js')
 const rideRoutes = require('./routes/ride.routes.js')
 connectToDb()
 
-app.use(cors({
-    origin: "https://uber-clone-frontend-s9qu.onrender.com", // Allow frontend
-    methods: "GET, POST, PUT, DELETE",
-    credentials: true
-}));
+app.use(cors({origin:"*"}));
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cookieParser())
