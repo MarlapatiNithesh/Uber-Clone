@@ -7,8 +7,7 @@ const SocketContext = ({ children }) => {
   const socket = useRef(null);
 
   useEffect(() => {
-    // Establish connection with the server
-    socket.current = io(`${import.meta.env.VITE_BASE_URL}`); // Replace with your server URL
+    socket.current = io(`${import.meta.env.VITE_BASE_URL}`); 
     console.log("Socket connected");
 
     // Cleanup on component unmount
