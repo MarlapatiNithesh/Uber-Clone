@@ -15,8 +15,13 @@ const app = express();
 connectToDb();
 
 
+const allowedOrigins = [
+  'https://uber-clone-frontend-s9qu.onrender.com',
+  'http://localhost:5173',
+];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'https://uber-clone-frontend-s9qu.onrender.com',
+  origin: allowedOrigins,
   credentials: true,
 }));
 
