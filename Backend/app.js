@@ -18,7 +18,6 @@ connectToDb();
 
 // ✅ ALLOWED ORIGINS
 const allowedOrigins = [
-  'https://uber-clone-frontend-s9qu.onrender.com',
   'http://localhost:5173',
 ];
 

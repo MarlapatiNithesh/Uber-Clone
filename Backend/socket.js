@@ -8,7 +8,6 @@ function initializeSocket(server) {
   io = new Server(server, {
     cors: {
       origin: [
-        "https://uber-clone-frontend-s9qu.onrender.com",
         "http://localhost:5173"
       ],
       methods: ["GET", "POST"],
