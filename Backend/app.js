@@ -14,10 +14,20 @@ const rideRoutes = require('./routes/ride.routes.js');
 const app = express();
 connectToDb();
 
+
 app.use(cors({
-  origin:"https://uber-clone-frontend-s9qu.onrender.com",
+  origin: process.env.FRONTEND_URL || 'https://uber-clone-frontend-s9qu.onrender.com',
   credentials: true,
 }));
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL || 'https://uber-clone-frontend-s9qu.onrender.com');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin,X-Requested-With,Content-Type,Accept,Authorization');
+  next();
+});
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
