@@ -7,23 +7,30 @@ let io;
 function initializeSocket(server) {
   io = new Server(server, {
     cors: {
-      origin: process.env.FRONTEND_URL,
+      origin: [
+        "https://uber-clone-frontend-s9qu.onrender.com",
+        "http://localhost:5173"
+      ],
       methods: ["GET", "POST"],
+      credentials: true,
     },
   });
 
   io.on("connection", (socket) => {
-    console.log(`Socket connected: ${socket.id}`);
+    console.log(`✅ Socket connected: ${socket.id}`);
 
+    // ✅ Send test event to frontend
+    socket.emit("test", "🧠 Hello from server via WebSocket!");
+
+    // ✅ Join event
     socket.on("join", async (data) => {
       if (!data || typeof data !== "object") {
-        console.error("Received null or invalid data");
+        console.error("❌ Received null or invalid join data");
         return;
       }
 
-      const { userId, userType } = data; // ✅ Now safe to destructure
-
-      console.log(`User ID: ${userId}, User Type: ${userType}`);
+      const { userId, userType } = data;
+      console.log(`📌 Join: User ID - ${userId}, Type - ${userType}`);
 
       try {
         if (userType === "user") {
@@ -32,10 +39,11 @@ function initializeSocket(server) {
           await captainModel.findByIdAndUpdate(userId, { socketId: socket.id });
         }
       } catch (error) {
-        console.error("Database update error:", error.message);
+        console.error("❌ DB update error on join:", error.message);
       }
     });
 
+    // ✅ Location update event
     socket.on("update-location-captain", async (data) => {
       try {
         if (!data || typeof data !== "object") {
@@ -44,32 +52,48 @@ function initializeSocket(server) {
 
         const { userId, location } = data;
 
-        if (!userId || !location || typeof location.lat !== "number" || typeof location.lng !== "number") {
+        if (
+          !userId ||
+          !location ||
+          typeof location.lat !== "number" ||
+          typeof location.lng !== "number"
+        ) {
           return socket.emit("error", { message: "Invalid location data" });
         }
 
-        await captainModel.findByIdAndUpdate(userId, { location:{
-            lat:location.lat,
-            lng:location.lng,
-        } });
+        await captainModel.findByIdAndUpdate(userId, {
+          location: {
+            lat: location.lat,
+            lng: location.lng,
+          },
+        });
+
+        console.log(`📍 Updated location for captain ${userId}`);
 
       } catch (error) {
-        console.error("Error updating captain location:", error.message);
+        console.error("❌ Error updating location:", error.message);
         socket.emit("error", { message: "Failed to update location" });
       }
     });
 
+    // ✅ Disconnect event
     socket.on("disconnect", () => {
-      console.log(`Socket disconnected: ${socket.id}`);
+      console.log(`⚠️ Socket disconnected: ${socket.id}`);
+    });
+
+    // ✅ Global error catcher
+    socket.on("error", (err) => {
+      console.error("🚨 Socket error:", err);
     });
   });
 }
 
+// ✅ External socket emit function
 function sendMessageToSocketId(socketId, messageObj) {
   if (io) {
     io.to(socketId).emit(messageObj.event, messageObj.ride);
   } else {
-    console.error("Socket.io is not initialized.");
+    console.error("❌ Socket.io is not initialized.");
   }
 }
 

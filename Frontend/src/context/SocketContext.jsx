@@ -7,39 +7,57 @@ const SocketContext = ({ children }) => {
   const socket = useRef(null);
 
   useEffect(() => {
+    // 🔐 Initialize socket
     socket.current = io(import.meta.env.VITE_BASE_URL, {
       transports: ["websocket", "polling"],
-      autoConnect: false,
       withCredentials: true,
+      autoConnect: true, // auto connect by default
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
     });
 
-    socket.current.connect();
-
-    socket.current.on("connect_error", (err) => {
-      console.error("Socket connection error:", err.message);
-    });
-
+    // ✅ Connection success
     socket.current.on("connect", () => {
-      console.log("Socket successfully connected:", socket.current.id);
+      console.log("✅ Socket successfully connected:", socket.current.id);
     });
 
+    // ❌ Connection error
+    socket.current.on("connect_error", (err) => {
+      console.error("🚨 Socket connection error:", err.message);
+    });
+
+    // 🧪 Listen for test message from server
+    socket.current.on("test", (data) => {
+      console.log("🧪 Received test message from server:", data);
+    });
+
+    // ✅ Cleanup
     return () => {
-      socket.current.disconnect();
-      socket.current.off("connect_error");
-      socket.current.off("connect");
-      console.log("Socket disconnected");
+      if (socket.current) {
+        socket.current.disconnect();
+        socket.current.off("connect");
+        socket.current.off("connect_error");
+        socket.current.off("test");
+        console.log("🔌 Socket disconnected");
+      }
     };
   }, []);
 
+  // 📤 Emit message
   const sendMessage = (eventName, data) => {
-    if (socket.current) {
+    if (socket.current && socket.current.connected) {
       socket.current.emit(eventName, data);
+    } else {
+      console.warn("⚠️ Cannot send message. Socket not connected.");
     }
   };
 
+  // 📥 Listen to events
   const receiveMessage = (eventName, callback) => {
     if (socket.current) {
       socket.current.on(eventName, callback);
+    } else {
+      console.warn(`⚠️ Cannot listen for "${eventName}". Socket not initialized.`);
     }
   };
 
