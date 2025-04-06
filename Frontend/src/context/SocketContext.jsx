@@ -8,13 +8,7 @@ const SocketContext = ({ children }) => {
 
   useEffect(() => {
     // 🔐 Initialize socket
-    socket.current = io(import.meta.env.VITE_BASE_URL, {
-      transports: ["websocket", "polling"],
-      withCredentials: true,
-      autoConnect: true, // auto connect by default
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
-    });
+    socket.current = io(import.meta.env.VITE_BASE_URL);
 
     // ✅ Connection success
     socket.current.on("connect", () => {
