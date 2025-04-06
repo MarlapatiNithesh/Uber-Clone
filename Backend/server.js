@@ -7,7 +7,7 @@ const server = http.createServer(app);
 
 initializeSocket(server);
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`🚀 Server running on port ${port}`);
 });
 server.keepAliveTimeout = 120 * 1000;
