@@ -12,9 +12,8 @@ const mapRoutes = require('./routes/map.routes.js');
 const rideRoutes = require('./routes/ride.routes.js');
 
 const app = express();
-connectToDb();
 
-// ✅ CORS fix for frontend deployment and local dev
+// ✅ Setup CORS for specific frontend origins
 const allowedOrigins = [
   'https://uber-clone-frontend-jjai.onrender.com',
   'http://localhost:5173',
@@ -25,9 +24,9 @@ app.use((req, res, next) => {
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
   }
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin,X-Requested-With,Content-Type,Accept,Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin,X-Requested-With,Content-Type,Accept,Authorization');
 
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);
@@ -36,19 +35,36 @@ app.use((req, res, next) => {
   next();
 });
 
-// Middleware
+// Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Routes
+// Health check
 app.get('/', (req, res) => {
-  res.send('Hello world!');
+  res.send('✅ API is running...');
 });
 
+// Routes
 app.use('/users', userRoutes);
 app.use('/captains', captainRoutes);
 app.use('/maps', mapRoutes);
 app.use('/rides', rideRoutes);
+
+// ✅ Start server after DB connects
+async function startServer() {
+  try {
+    await connectToDb();
+    const PORT = process.env.PORT || 4000;
+    app.listen(PORT, () => {
+      console.log(`🚀 Server is running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error('❌ Failed to connect to DB', err.message);
+    process.exit(1);
+  }
+}
+
+startServer();
 
 module.exports = app;
