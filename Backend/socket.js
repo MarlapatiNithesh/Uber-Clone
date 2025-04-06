@@ -7,9 +7,10 @@ let io;
 function initializeSocket(server) {
   io = new Server(server, {
     cors: {
-      origin: "*",
+      origin: "https://uber-clone-frontend-s9qu.onrender.com",
       methods: ["GET", "POST"],
-    },
+      credentials: true
+    },    
   });
 
   io.on("connection", (socket) => {

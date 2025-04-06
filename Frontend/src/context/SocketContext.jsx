@@ -7,12 +7,26 @@ const SocketContext = ({ children }) => {
   const socket = useRef(null);
 
   useEffect(() => {
-    socket.current = io(`${import.meta.env.VITE_BASE_URL}`); 
-    console.log("Socket connected");
+    socket.current = io(import.meta.env.VITE_BASE_URL, {
+      transports: ["websocket", "polling"],
+      autoConnect: false,
+      withCredentials: true,
+    });
 
-    // Cleanup on component unmount
+    socket.current.connect();
+
+    socket.current.on("connect_error", (err) => {
+      console.error("Socket connection error:", err.message);
+    });
+
+    socket.current.on("connect", () => {
+      console.log("Socket successfully connected:", socket.current.id);
+    });
+
     return () => {
       socket.current.disconnect();
+      socket.current.off("connect_error");
+      socket.current.off("connect");
       console.log("Socket disconnected");
     };
   }, []);
