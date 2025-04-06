@@ -13,7 +13,6 @@ import { UserDataContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import LiveTracking from "../components/LiveTracking";
 
-
 const Home = () => {
   const [pickUp, setPickUp] = useState("");
   const [destination, setDestination] = useState("");
