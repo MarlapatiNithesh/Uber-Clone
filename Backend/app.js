@@ -1,9 +1,9 @@
-const dotenv = require('dotenv');
-dotenv.config();
-
+// app.js
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const dotenv = require('dotenv');
+dotenv.config();
 
 const connectToDb = require('./db/db.js');
 const userRoutes = require('./routes/user.routes.js');
@@ -13,7 +13,7 @@ const rideRoutes = require('./routes/ride.routes.js');
 
 const app = express();
 
-// ✅ Setup CORS for specific frontend origins
+// CORS settings
 const allowedOrigins = [
   'https://uber-clone-frontend-jjai.onrender.com',
   'http://localhost:5173',
@@ -51,20 +51,4 @@ app.use('/captains', captainRoutes);
 app.use('/maps', mapRoutes);
 app.use('/rides', rideRoutes);
 
-// ✅ Start server after DB connects
-async function startServer() {
-  try {
-    await connectToDb();
-    const PORT = process.env.PORT || 4000;
-    app.listen(PORT, () => {
-      console.log(`🚀 Server is running on port ${PORT}`);
-    });
-  } catch (err) {
-    console.error('❌ Failed to connect to DB', err.message);
-    process.exit(1);
-  }
-}
-
-startServer();
-
-module.exports = app;
+module.exports = { app, connectToDb };
