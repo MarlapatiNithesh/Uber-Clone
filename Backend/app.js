@@ -16,6 +16,7 @@ connectToDb();
 
 
 const allowedOrigins = [
+  'https://uber-clone-frontend-jjai.onrender.com',
   'http://localhost:5173',
 ];
 
