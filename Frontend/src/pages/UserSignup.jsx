@@ -38,7 +38,7 @@ const UserSignup = () => {
       console.error("Signup failed:", err);
       setError(err.response?.data?.message || "Signup failed. Please try again.");
     } finally {
-      setLoading(false); // Enable button again
+      setLoading(false); 
     }
   };
 

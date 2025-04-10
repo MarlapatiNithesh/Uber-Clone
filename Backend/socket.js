@@ -9,7 +9,6 @@ function initializeSocket(server) {
     cors: {
       origin: [
         "https://uber-clone-frontend-jjai.onrender.com",
-        "http://localhost:5173"
       ],
       methods: ["GET", "POST"],
       credentials: true,
