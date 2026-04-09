@@ -8,7 +8,11 @@ const SocketContext = ({ children }) => {
 
   useEffect(() => {
     // 🔐 Initialize socket
-    socket.current = io(import.meta.env.VITE_BASE_URL);
+    socket.current = io(import.meta.env.VITE_BASE_URL, {
+      transports: ["websocket"], // Force WebSocket instead of polling to prevent timeouts
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+    });
 
     // ✅ Connection success
     socket.current.on("connect", () => {
