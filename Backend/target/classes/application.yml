@@ -1,0 +1,26 @@
+server:
+  port: 5000
+
+spring:
+  application:
+    name: backend
+  
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/uber-clone}
+    
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+jwt:
+  secret: ${JWT_SECRET:veryLongSecretKeyForJWTSigningThatIsAtLeast256BitsToAvoidSecurityExceptions}
+  expiration-ms: 86400000 # 24 hours
+
+socket:
+  host: 0.0.0.0
+  port: 5001
+
+google:
+  maps:
+    api-key: ${GOOGLE_MAPS_API:AIzaSyAj1TAWs77d9Ef2HJN2UvjZmrgCoZWC9b4}

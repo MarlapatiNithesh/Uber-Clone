@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: uber_mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - uber_network
+
+  redis:
+    image: redis:alpine
+    container_name: uber_redis
+    restart: always
+    volumes:
+      - redis_data:/data
+    networks:
+      - uber_network
+
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: uber_backend
+    restart: always
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/uber-clone
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=veryLongSecretKeyForJWTSigningThatIsAtLeast256BitsToAvoidSecurityExceptions
+      - GOOGLE_MAPS_API=${GOOGLE_MAPS_API}
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - uber_network
+
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_BASE_URL=http://localhost:5000
+        - VITE_GOOGLE_MAPS_API=${GOOGLE_MAPS_API}
+    container_name: uber_frontend
+    ports:
+      - "5174:80"
+    depends_on:
+      - backend
+    networks:
+      - uber_network
+
+volumes:
+  mongodb_data:
+  redis_data:
+
+networks:
+  uber_network:
+    driver: bridge
