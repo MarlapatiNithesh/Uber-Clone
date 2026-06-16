@@ -1,2 +1,30 @@
+# Environment variables & secrets
 .env
-node_modules
+.env.*
+*.env
+
+# Node / Frontend dependencies & builds
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+build/
+**/build/
+
+# Maven / Java backend builds
+target/
+**/target/
+*.class
+*.jar
+*.war
+*.ear
+
+# IDE and System files
+.vscode/
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
